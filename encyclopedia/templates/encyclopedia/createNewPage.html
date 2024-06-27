@@ -1,0 +1,28 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Create a new Wiki Page
+{% endblock %}
+
+{% block body %}
+
+<div class="container m-0 d-flex flex-column justify-content-between" style="height:300px"> 
+        <h1 class="mb-3">Create a new Wiki Page</h1>
+        <form action="{% url 'createPage' %}" method="post"  class="form-group">
+            {% csrf_token %}
+            <label for="title" class="h5">Title:</label>
+            <input type="text"
+              class="form-control mb-3 w-75" name="title" id="tilte">
+            <label for="content"  class="h5">Content:</label>
+            <textarea class="form-control w-75" id="content" name="content" rows="7"></textarea>
+          
+          <small id="helpId" class="form-text text-muted">You can use markdown format!</small>
+          <button type="submit" class="btn btn-success w-75 mt-4" >Submit</button>
+          </form>
+          {% if error %}
+          <div class="alert alert-danger mt-3">{{ error }}</div>
+          {% endif %}
+    </div>
+
+
+{% endblock %}

@@ -1,4 +1,5 @@
 import markdown2
+from django.http import HttpResponse
 from django.shortcuts import render
 
 from . import util
@@ -24,3 +25,17 @@ def wiki(request,title):
         "entry": html_content
     })
 
+def createNewPage(request):
+    if request.method == 'POST':
+        title = request.POST.get('title').strip()
+        content = request.POST.get('content').strip()
+
+        if util.get_entry(title):
+            return render(request, "encyclopedia/createNewPage.html", {
+                "error": "An entry with this title already exists."
+            })
+
+        util.save_entry(title, content)
+        return wiki(request,title)
+
+    return render(request, "encyclopedia/createNewPage.html")
