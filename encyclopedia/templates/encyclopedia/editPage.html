@@ -1,0 +1,21 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Edit {{title | safe}}Content
+{% endblock %}
+
+{% block body %}
+
+<div class="container m-0 d-flex flex-column justify-content-between" style="height:300px"> 
+        <h1 class="mb-3">Edit {{title | safe }} Content</h1>
+        <form action="" method="post"  class="form-group">
+            {% csrf_token %}
+            <textarea class="form-control w-75" id="content" name="content" rows="14" cols="42">{{ content|safe }}</textarea>
+          
+          <small id="helpId" class="form-text text-muted">You can use markdown format!</small>
+          <button type="submit" class="btn btn-success w-75 mt-4" >Save</button>
+          </form>
+    </div>
+
+
+{% endblock %}

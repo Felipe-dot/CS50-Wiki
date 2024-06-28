@@ -1,6 +1,5 @@
-import markdown2
-from django.http import HttpResponse
-from django.shortcuts import render
+import markdown2, random
+from django.shortcuts import render, redirect
 
 from . import util
 
@@ -39,3 +38,56 @@ def createNewPage(request):
         return wiki(request,title)
 
     return render(request, "encyclopedia/createNewPage.html")
+
+
+def editPage(request, title):
+    if request.method == "POST":
+        new_content = request.POST.get('content')
+        if new_content is not None:
+            util.save_entry(title, new_content)
+            return redirect('index')
+
+    content = util.get_entry(title)
+    if content is None:
+        return render(request, "encyclopedia/error.html", {
+            "message": "The requested page was not found."
+        })
+
+    return render(request, "encyclopedia/editPage.html", {
+        "title": title,
+        "content": content
+    })
+
+def search(request):
+    query = request.GET.get('q', '')
+    if query:
+        entries = util.list_entries()
+        matching_entries = [entry for entry in entries if query.lower() in entry.lower()]
+        
+        exact_match = None
+        for entry in entries:
+            if entry.lower() == query.lower():
+                exact_match = entry
+                break
+        
+        if exact_match:
+            return redirect('wiki', title=exact_match)
+        
+        return render(request, "encyclopedia/search_results.html", {
+            "query": query,
+            "entries": matching_entries
+        })
+    return render(request, "encyclopedia/search_results.html", {
+        "query": query,
+        "entries": []
+    })
+
+def random_page(request):
+    entries = util.list_entries()
+    if entries:
+        random_entry = random.choice(entries)
+        return redirect('wiki', title=random_entry)
+    else:
+        return render(request, "encyclopedia/error.html", {
+            "message": "No entries available."
+        })
