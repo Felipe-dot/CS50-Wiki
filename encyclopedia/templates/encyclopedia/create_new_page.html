@@ -8,7 +8,7 @@
 
 <div class="container m-0 d-flex flex-column justify-content-between" style="height:300px"> 
         <h1 class="mb-3">Create a new Wiki Page</h1>
-        <form action="{% url 'createPage' %}" method="post"  class="form-group">
+        <form action="{% url 'create_page' %}" method="post"  class="form-group">
             {% csrf_token %}
             <label for="title" class="h5">Title:</label>
             <input type="text"

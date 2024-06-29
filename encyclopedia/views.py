@@ -1,4 +1,4 @@
-import markdown2, random
+import random
 from django.shortcuts import render, redirect
 
 from . import util
@@ -17,30 +17,30 @@ def wiki(request,title):
              "message": "The requested page was not found."
         })
     
-    html_content = markdown2.markdown(content)
+    html_content = util.markdown_to_html(content)
 
     return render(request, "encyclopedia/content.html", {
         "title": title,
         "entry": html_content
     })
 
-def createNewPage(request):
+def create_new_page(request):
     if request.method == 'POST':
         title = request.POST.get('title').strip()
         content = request.POST.get('content').strip()
 
         if util.get_entry(title):
-            return render(request, "encyclopedia/createNewPage.html", {
+            return render(request, "encyclopedia/create_new_page.html", {
                 "error": "An entry with this title already exists."
             })
 
         util.save_entry(title, content)
         return wiki(request,title)
 
-    return render(request, "encyclopedia/createNewPage.html")
+    return render(request, "encyclopedia/create_new_page.html")
 
 
-def editPage(request, title):
+def edit_page(request, title):
     if request.method == "POST":
         new_content = request.POST.get('content')
         if new_content is not None:
@@ -53,7 +53,7 @@ def editPage(request, title):
             "message": "The requested page was not found."
         })
 
-    return render(request, "encyclopedia/editPage.html", {
+    return render(request, "encyclopedia/edit_page.html", {
         "title": title,
         "content": content
     })
