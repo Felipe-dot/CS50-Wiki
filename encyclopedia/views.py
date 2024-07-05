@@ -1,5 +1,7 @@
 import random
 from django.shortcuts import render, redirect
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 from . import util
 
@@ -35,8 +37,7 @@ def create_new_page(request):
             })
 
         util.save_entry(title, content)
-        return wiki(request,title)
-
+        return HttpResponseRedirect(reverse("wiki", kwargs={"title": title}))
     return render(request, "encyclopedia/create_new_page.html")
 
 
